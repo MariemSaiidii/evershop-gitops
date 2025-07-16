@@ -1,0 +1,46 @@
+# PostgreSQL Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-postgres       # Add release name for uniqueness
+spec:
+  type: ClusterIP                         # Internal cluster communication only
+  ports:
+    - port: 5432                         # Default PostgreSQL port
+  selector:
+    app: postgres                        # Matches the pod labels
+
+---
+# PostgreSQL Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-postgres
+spec:
+  replicas: {{ .Values.postgres.replicaCount }}    # Usually 1 for DB
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: "{{ .Values.postgres.image.repository }}:{{ .Values.postgres.image.tag }}"
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_PASSWORD
+              value: "{{ .Values.postgres.password }}"
+            - name: POSTGRES_USER
+              value: "{{ .Values.postgres.user }}"
+            - name: POSTGRES_DB
+              value: "postgres"
+          volumeMounts:
+            - name: pgdata
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: pgdata
+          emptyDir: {}          # WARNING: ephemeral storage, data lost if pod restarts!

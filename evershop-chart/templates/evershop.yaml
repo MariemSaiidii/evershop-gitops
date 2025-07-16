@@ -1,0 +1,46 @@
+# Service for the EverShop app
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-evershop          # Unique name per Helm release
+spec:
+  type: NodePort                             # Expose app outside cluster on a port
+  selector:
+    app: evershop                           # Matches Deployment pod labels
+  ports:
+    - port: 3000                            # Service port inside cluster
+      targetPort: {{ .Values.evershop.containerPort }}  # Container port
+      nodePort: {{ .Values.evershop.nodePort | default 30001 }}  # External port
+
+---
+# Deployment for the EverShop app
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-evershop
+spec:
+  replicas: {{ .Values.evershop.replicaCount }}         # Number of pod replicas
+  selector:
+    matchLabels:
+      app: evershop
+  template:
+    metadata:
+      labels:
+        app: evershop
+    spec:
+      containers:
+        - name: evershop
+          image: "{{ .Values.evershop.image.repository }}:{{ .Values.evershop.image.tag }}"  # Docker image to use
+          ports:
+            - containerPort: {{ .Values.evershop.containerPort }}    # Port exposed inside container
+          env:
+            - name: DB_HOST
+              value: "{{ .Values.postgres.database.host | default "localhost" }}"
+            - name: DB_PORT
+              value: "{{ .Values.postgres.port | default "5432" }}"
+            - name: DB_USER
+              value: "{{ .Values.postgres.user | default "postgres" }}"
+            - name: DB_PASSWORD
+              value: "{{ .Values.postgres.password | default "postgres" }}"
+            - name: DB_NAME
+              value: "postgres"  # or make this configurable too                                    # Database name (hardcoded here)
