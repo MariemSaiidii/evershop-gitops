@@ -5,7 +5,7 @@ evershop:
     repository: evershop/evershop   # Docker image repo for EverShop app
     tag: latest                     # Image tag/version
   containerPort: 3000               # Port EverShop listens to in container
-  nodePort: 30002                   # External port exposed on NodePort service
+  nodePort: 30002                # External port exposed on NodePort service
      
 # PostgreSQL DB related values
 postgres:
