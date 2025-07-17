@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: evershop-staging
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/MariemSaiidii/evershop-gitops.git
+    targetRevision: HEAD
+    path: evershop-chart
+    helm:
+      valueFiles:
+        - ../environments/staging/values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: staging
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
