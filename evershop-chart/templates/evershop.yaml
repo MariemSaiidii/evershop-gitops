@@ -35,7 +35,7 @@ spec:
             - containerPort: {{ .Values.evershop.containerPort }}    # Port exposed inside container
           env:
             - name: DB_HOST
-              value: "{{ .Values.postgres.database.host | default "localhost" }}"
+              value: "{{ .Values.postgres.serviceName | default "localhost" }}"
             - name: DB_PORT
               value: "{{ .Values.postgres.port | default "5432" }}"
             - name: DB_USER
