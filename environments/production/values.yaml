@@ -9,9 +9,9 @@ evershop:
      
 # PostgreSQL DB related values
 postgres:
-  serviceName: postgres             # Service name to connect to DB from app
+  serviceName: evershop-production-postgres             # Service name to connect to DB from app
   database:
-      host: my-evershop-postgres  
+      host: evershop-production-postgres  
   port: 5432                       # Default PostgreSQL port
   user: postgres                   # DB username
   password: postgres               # DB password (for demo/dev only)
