@@ -1,6 +1,6 @@
 # EverShop app related values
 evershop:
-  replicaCount: 1                    # Number of EverShop pods
+  replicaCount: 2                   # Number of EverShop pods
   image:
     repository: evershop/evershop   # Docker image repo for EverShop app
     tag: latest                     # Image tag/version
